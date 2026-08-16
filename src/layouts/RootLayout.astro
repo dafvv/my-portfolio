@@ -7,7 +7,6 @@ import InitialLoader from '@/components/InitialLoader.astro';
 import '@/styles/global.css';
 
 interface Props {
-  title?: string;
   description?: string;
   image?: string;
   article?: {
@@ -17,12 +16,12 @@ interface Props {
 }
 
 const {
-  title = 'Daffa Bisma | Portfolio',
   description = 'Personal portfolio and technical blog of Daffa Bisma Rudidharma. Full-stack developer specializing in TypeScript, React, Astro, PHP, Laravel, and cloud architectures.',
   image = '/og-image.png',
   article,
 } = Astro.props;
 
+const SITE_TITLE = 'Daffa Bisma | Portfolio';
 const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://daffabisma.com';
 const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageURL = new URL(image, siteUrl).toString();
@@ -57,14 +56,14 @@ const personSchema = {
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Primary Meta Tags -->
-    <title>{title}</title>
-    <meta name="title" content={title} />
+    <title>{SITE_TITLE}</title>
+    <meta name="title" content={SITE_TITLE} />
     <meta name="description" content={description} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={SITE_TITLE} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageURL} />
     <meta property="og:site_name" content="Daffa Bisma" />
@@ -79,7 +78,7 @@ const personSchema = {
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
+    <meta property="twitter:title" content={SITE_TITLE} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImageURL} />
 
