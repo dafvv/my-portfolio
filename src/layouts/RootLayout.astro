@@ -1,10 +1,13 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import { inject } from '@vercel/analytics';
 import Sidebar from '@/components/Sidebar.astro';
 import ThemeToggle from '@/components/ThemeToggle';
 import CursorTrail from '@/components/CursorTrail.astro';
 import InitialLoader from '@/components/InitialLoader.astro';
 import '@/styles/global.css';
+
+inject();
 
 interface Props {
   title?: string;
@@ -118,6 +121,12 @@ const personSchema = {
 
     <!-- Astro Native View Transitions with Fade fallback -->
     <ClientRouter fallback="swap" />
+
+    <!-- Vercel Web Analytics -->
+    <script is:inline>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script is:inline defer src="/_vercel/insights/script.js"></script>
   </head>
   <body class="min-h-screen bg-[#f2f0ef] dark:bg-[#191919] text-[#191919] dark:text-[#f2f0ef] antialiased transition-colors duration-200 selection:bg-[#191919] selection:text-[#f2f0ef] dark:selection:bg-[#f2f0ef] dark:selection:text-[#191919]">
     <!-- Minimal First-Load Screen (Session-Scoped) -->
