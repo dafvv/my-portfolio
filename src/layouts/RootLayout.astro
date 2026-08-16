@@ -1,0 +1,235 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Sidebar from '@/components/Sidebar.astro';
+import ThemeToggle from '@/components/ThemeToggle';
+import CursorTrail from '@/components/CursorTrail.astro';
+import InitialLoader from '@/components/InitialLoader.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: {
+    publishedTime?: string;
+    tags?: string[];
+  };
+}
+
+const {
+  title = 'Daffa Bisma | Portfolio',
+  description = 'Personal portfolio and technical blog of Daffa Bisma Rudidharma. Full-stack developer specializing in TypeScript, React, Astro, PHP, Laravel, and cloud architectures.',
+  image = '/og-image.png',
+  article,
+} = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://daffabisma.com';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageURL = new URL(image, siteUrl).toString();
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/' || currentPath === '';
+
+// Person structured data (Schema.org)
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Daffa Bisma Rudidharma',
+  url: siteUrl,
+  jobTitle: 'Full-stack Developer',
+  description: 'Full-stack developer specializing in TypeScript, React, Astro, PHP, Laravel, and resilient cloud architectures.',
+  sameAs: [
+    'https://github.com/dafvv',
+    'https://linkedin.com/in/daffabrudidharma',
+    'https://instagram.com/daffabr_'
+  ]
+};
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:site_name" content="Daffa Bisma" />
+    <meta property="og:locale" content="en_US" />
+    {article?.publishedTime && (
+      <meta property="article:published_time" content={article.publishedTime} />
+    )}
+    {article?.tags?.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImageURL} />
+
+    <!-- Google Fonts & Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Overpass:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" 
+      rel="stylesheet" 
+    />
+
+    <!-- Person Structured Data (JSON-LD) -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+    <!-- Zero-FOUC Theme & Session Initializer -->
+    <script is:inline>
+      function applyThemeAndSession() {
+        const storedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+
+        if (sessionStorage.getItem('hasVisited') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('has-visited');
+        }
+      }
+      applyThemeAndSession();
+      document.addEventListener('astro:after-swap', applyThemeAndSession);
+    </script>
+
+    <!-- Page Specific Head Injections -->
+    <slot name="head" />
+
+    <!-- Astro Native View Transitions with Fade fallback -->
+    <ClientRouter fallback="swap" />
+  </head>
+  <body class="min-h-screen bg-[#f2f0ef] dark:bg-[#191919] text-[#191919] dark:text-[#f2f0ef] antialiased transition-colors duration-200 selection:bg-[#191919] selection:text-[#f2f0ef] dark:selection:bg-[#f2f0ef] dark:selection:text-[#191919]">
+    <!-- Minimal First-Load Screen (Session-Scoped) -->
+    <InitialLoader />
+
+    <!-- Canvas Cursor Trail Overlay -->
+    <CursorTrail />
+
+    <!-- Global Fixed Sidebar Navigation -->
+    <Sidebar currentPath={currentPath} />
+
+    <!-- Top Right Theme Switcher Island Excluded from View Transitions -->
+    <div 
+      class="fixed top-4 right-4 md:top-12 md:right-12 z-40"
+      transition:name="theme-toggle"
+    >
+      <ThemeToggle client:idle />
+    </div>
+
+    <!-- Main Layout Container (Offset by desktop sidebar width 156px) -->
+    <div class="min-h-screen md:pl-[156px] pt-20 md:pt-0 flex flex-col justify-between">
+      <main class="w-full max-w-[1280px] mx-auto px-6 sm:px-12 lg:px-16 py-12 md:py-16">
+        <slot />
+      </main>
+
+      {isHome && (
+        <footer class="w-full max-w-[1280px] mx-auto px-6 sm:px-12 lg:px-16 py-8 border-t border-[#191919] dark:border-[#f2f0ef] flex flex-col sm:flex-row items-center justify-between font-mono text-[14px] opacity-75">
+          <span>© {new Date().getFullYear()} DAFFA BISMA RUDIDHARMA</span>
+          <span class="mt-2 sm:mt-0">BUILT WITH ASTRO + TAILWIND</span>
+        </footer>
+      )}
+    </div>
+
+    <!-- Optimized Lenis Smooth Scroll Script with Visibility & Reduced-Motion Handlers -->
+    <script>
+      import Lenis from 'lenis';
+
+      function initLenis() {
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (motionQuery.matches) {
+          return;
+        }
+
+        const lenis = new Lenis({
+          duration: 2.0,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 0.8,
+          touchMultiplier: 1.5,
+        });
+
+        let rafId: number | null = null;
+        let isRunning = false;
+
+        function raf(time: number) {
+          if (document.hidden || motionQuery.matches) {
+            isRunning = false;
+            return;
+          }
+          lenis.raf(time);
+          rafId = requestAnimationFrame(raf);
+          isRunning = true;
+        }
+
+        function startScrollLoop() {
+          if (!isRunning && !document.hidden && !motionQuery.matches) {
+            rafId = requestAnimationFrame(raf);
+            isRunning = true;
+          }
+        }
+
+        function stopScrollLoop() {
+          if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+          isRunning = false;
+        }
+
+        const handleVisibility = () => {
+          if (document.hidden) {
+            stopScrollLoop();
+          } else {
+            startScrollLoop();
+          }
+        };
+
+        const handleMotion = (e: MediaQueryListEvent) => {
+          if (e.matches) {
+            stopScrollLoop();
+            lenis.destroy();
+          } else {
+            startScrollLoop();
+          }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibility);
+        motionQuery.addEventListener('change', handleMotion);
+
+        startScrollLoop();
+
+        document.addEventListener('astro:before-swap', () => {
+          stopScrollLoop();
+          document.removeEventListener('visibilitychange', handleVisibility);
+          motionQuery.removeEventListener('change', handleMotion);
+          lenis.destroy();
+        }, { once: true });
+      }
+
+      document.addEventListener('astro:page-load', initLenis);
+    </script>
+  </body>
+</html>

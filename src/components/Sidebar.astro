@@ -1,0 +1,159 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const isHome = currentPath === '/' || currentPath === '';
+const isProjects = currentPath.startsWith('/projects');
+const isBlog = currentPath.startsWith('/blog');
+---
+
+<!-- Desktop Sidebar (>= md) Excluded from View Transitions -->
+<aside 
+  class="hidden md:flex fixed left-0 top-0 h-screen w-[156px] border-r border-[#191919] dark:border-[#f2f0ef] bg-[#f2f0ef] dark:bg-[#191919] flex-col justify-between p-8 z-40 transition-colors duration-200"
+  aria-label="Main Navigation"
+  transition:name="sidebar"
+>
+  <div class="flex flex-col space-y-12 pt-4">
+    <!-- Home Navigation Item -->
+    <div class="flex flex-col items-start group">
+      <a 
+        href="/" 
+        data-astro-prefetch
+        class={`font-mono text-[20px] transition-opacity hover:opacity-70 focus-visible:ring-2 ${isHome ? 'font-bold' : 'font-normal opacity-90'}`}
+        aria-current={isHome ? 'page' : undefined}
+      >
+        Home
+      </a>
+      {isHome && (
+        <div class="h-[1px] bg-[#191919] dark:bg-[#f2f0ef] w-[40px] mt-1" aria-hidden="true"></div>
+      )}
+    </div>
+
+    <!-- Projects Navigation Item -->
+    <div class="flex flex-col items-start group">
+      <a 
+        href="/projects" 
+        data-astro-prefetch
+        class={`font-mono text-[20px] transition-opacity hover:opacity-70 focus-visible:ring-2 ${isProjects ? 'font-bold' : 'font-normal opacity-90'}`}
+        aria-current={isProjects ? 'page' : undefined}
+      >
+        Projects
+      </a>
+      {isProjects && (
+        <div class="h-[1px] bg-[#191919] dark:bg-[#f2f0ef] w-[80px] mt-1" aria-hidden="true"></div>
+      )}
+    </div>
+
+    <!-- Blog Navigation Item -->
+    <div class="flex flex-col items-start group">
+      <a 
+        href="/blog" 
+        data-astro-prefetch
+        class={`font-mono text-[20px] transition-opacity hover:opacity-70 focus-visible:ring-2 ${isBlog ? 'font-bold' : 'font-normal opacity-90'}`}
+        aria-current={isBlog ? 'page' : undefined}
+      >
+        Blog
+      </a>
+      {isBlog && (
+        <div class="h-[1px] bg-[#191919] dark:bg-[#f2f0ef] w-[40px] mt-1" aria-hidden="true"></div>
+      )}
+    </div>
+  </div>
+
+  <!-- Social Shortcuts (LinkedIn, GitHub, Instagram) -->
+  <div class="flex flex-col space-y-4 pb-8">
+    <a 
+      href="https://linkedin.com/in/daffabrudidharma" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="w-[48px] h-[48px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex flex-col items-center justify-center transition-transform hover:scale-105 focus-visible:ring-2 p-2.5 cursor-pointer"
+      aria-label="LinkedIn Profile (daffbrudidharma)"
+    >
+      <img src="/media/icons/linkedin.svg" alt="LinkedIn" class="w-5 h-5 dark:invert" />
+    </a>
+
+    <a 
+      href="https://github.com/dafvv" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="w-[48px] h-[48px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex flex-col items-center justify-center transition-transform hover:scale-105 focus-visible:ring-2 p-2.5 cursor-pointer"
+      aria-label="GitHub Profile (dafvv)"
+    >
+      <img src="/media/icons/github.svg" alt="GitHub" class="w-5 h-5 dark:invert" />
+    </a>
+
+    <a 
+      href="https://instagram.com/daffabr_" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="w-[48px] h-[48px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex flex-col items-center justify-center transition-transform hover:scale-105 focus-visible:ring-2 p-2.5 cursor-pointer"
+      aria-label="Instagram Profile (daffabr_)"
+    >
+      <img src="/media/icons/instagram.svg" alt="Instagram" class="w-5 h-5 dark:invert" />
+    </a>
+  </div>
+</aside>
+
+<!-- Mobile Navigation Header (< md) Excluded from View Transitions -->
+<nav 
+  class="md:hidden fixed top-0 left-0 right-0 h-16 border-b border-[#191919] dark:border-[#f2f0ef] bg-[#f2f0ef] dark:bg-[#191919] z-40 px-4 flex items-center justify-between transition-colors"
+  aria-label="Mobile Navigation"
+  transition:name="mobile-nav"
+>
+  <div class="flex items-center space-x-6">
+    <a 
+      href="/" 
+      data-astro-prefetch
+      class={`font-mono text-[16px] ${isHome ? 'font-bold underline underline-offset-4' : 'opacity-80'}`}
+    >
+      Home
+    </a>
+    <a 
+      href="/projects" 
+      data-astro-prefetch
+      class={`font-mono text-[16px] ${isProjects ? 'font-bold underline underline-offset-4' : 'opacity-80'}`}
+    >
+      Projects
+    </a>
+    <a 
+      href="/blog" 
+      data-astro-prefetch
+      class={`font-mono text-[16px] ${isBlog ? 'font-bold underline underline-offset-4' : 'opacity-80'}`}
+    >
+      Blog
+    </a>
+  </div>
+
+  <div class="flex items-center space-x-2">
+    <a 
+      href="https://linkedin.com/in/daffbrudidharma" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="w-[36px] h-[36px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex items-center justify-center p-2 cursor-pointer"
+      aria-label="LinkedIn Profile"
+    >
+      <img src="/media/icons/linkedin.svg" alt="LinkedIn" class="w-4 h-4 dark:invert" />
+    </a>
+    <a 
+      href="https://github.com/dafvv" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="w-[36px] h-[36px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex items-center justify-center p-2 cursor-pointer"
+      aria-label="GitHub Profile"
+    >
+      <img src="/media/icons/github.svg" alt="GitHub" class="w-4 h-4 dark:invert" />
+    </a>
+    <a 
+      href="https://instagram.com/daffabr_" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="w-[36px] h-[36px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex items-center justify-center p-2 cursor-pointer"
+      aria-label="Instagram Profile"
+    >
+      <img src="/media/icons/instagram.svg" alt="Instagram" class="w-4 h-4 dark:invert" />
+    </a>
+  </div>
+</nav>

@@ -1,0 +1,158 @@
+---
+// Canvas Cursor Line Trail - Hardware-Accelerated Smooth Line Ribbon
+---
+
+<canvas id="cursor-trail" class="fixed inset-0 pointer-events-none z-50 w-full h-full" aria-hidden="true"></canvas>
+
+<script>
+  function initCursorLineTrail() {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const isTouch = 'ontouchstart' in window;
+
+    if (motionQuery.matches || isTouch) {
+      return;
+    }
+
+    const canvas = document.getElementById('cursor-trail') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    interface TrailPoint {
+      x: number;
+      y: number;
+      age: number;
+    }
+
+    const points: TrailPoint[] = [];
+    const maxAge = 25;
+    let animationFrameId: number | null = null;
+    let isRunning = false;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      points.push({
+        x: e.clientX,
+        y: e.clientY,
+        age: 0,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    function render() {
+      if (!ctx || document.hidden || motionQuery.matches) {
+        isRunning = false;
+        return;
+      }
+      ctx.clearRect(0, 0, width, height);
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const strokeRgb = isDark ? '242, 240, 239' : '25, 25, 25';
+
+      // Age and prune points
+      for (let i = points.length - 1; i >= 0; i--) {
+        points[i].age++;
+        if (points[i].age >= maxAge) {
+          points.splice(i, 1);
+        }
+      }
+
+      // Draw smooth tapering line segments
+      if (points.length > 2) {
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        for (let i = 0; i < points.length - 1; i++) {
+          const p1 = points[i];
+          const p2 = points[i + 1];
+
+          const progress = (i + 1) / points.length;
+          const ageRatio = 1 - p1.age / maxAge;
+          const opacity = Math.max(progress * ageRatio * 0.7, 0);
+          const lineWidth = Math.max(progress * 2.8, 0.6);
+
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+
+          const midX = (p1.x + p2.x) / 2;
+          const midY = (p1.y + p2.y) / 2;
+          ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
+
+          ctx.strokeStyle = `rgba(${strokeRgb}, ${opacity})`;
+          ctx.lineWidth = lineWidth;
+          ctx.stroke();
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+      isRunning = true;
+    }
+
+    function startLoop() {
+      if (!isRunning && !document.hidden && !motionQuery.matches) {
+        animationFrameId = requestAnimationFrame(render);
+        isRunning = true;
+      }
+    }
+
+    function stopLoop() {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      isRunning = false;
+      if (ctx) {
+        ctx.clearRect(0, 0, width, height);
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else {
+        startLoop();
+      }
+    };
+
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        stopLoop();
+      } else {
+        startLoop();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    motionQuery.addEventListener('change', handleMotionChange);
+
+    startLoop();
+
+    // Cleanup on view transition swap
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        stopLoop();
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('resize', handleResize);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        motionQuery.removeEventListener('change', handleMotionChange);
+      },
+      { once: true }
+    );
+  }
+
+  // Bind to Astro page lifecycle
+  document.addEventListener('astro:page-load', initCursorLineTrail);
+</script>

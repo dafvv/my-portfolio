@@ -1,0 +1,60 @@
+---
+// Minimal first-load splash screen - executes once per browser session
+---
+
+<style is:global>
+  html.has-visited #initial-loader {
+    display: none !important;
+  }
+</style>
+
+<div
+  id="initial-loader"
+  class="fixed inset-0 z-[99999] flex items-center justify-center bg-[#f2f0ef] dark:bg-[#191919] text-[#191919] dark:text-[#f2f0ef] transition-opacity duration-300 ease-out pointer-events-auto"
+  aria-hidden="true"
+>
+  <span class="font-mono text-sm sm:text-base uppercase tracking-widest font-medium select-none text-center px-4">
+    DAFFA BISMA RUDIDHARMA
+  </span>
+</div>
+
+<script>
+  function handleLoader() {
+    const loader = document.getElementById('initial-loader');
+    if (!loader) return;
+
+    const hasVisited = sessionStorage.getItem('hasVisited');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (hasVisited || prefersReducedMotion) {
+      document.documentElement.classList.add('has-visited');
+      loader.remove();
+      return;
+    }
+
+    sessionStorage.setItem('hasVisited', 'true');
+
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      loader.style.pointerEvents = 'none';
+
+      setTimeout(() => {
+        loader.remove();
+        document.documentElement.classList.add('has-visited');
+      }, 300);
+    }, 2700);
+  }
+
+  // Intercept before view transition swap to strip loader from incoming document
+  document.addEventListener('astro:before-swap', (e) => {
+    if (sessionStorage.getItem('hasVisited') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const incomingLoader = e.newDocument.getElementById('initial-loader');
+      if (incomingLoader) {
+        incomingLoader.remove();
+      }
+      e.newDocument.documentElement.classList.add('has-visited');
+    }
+  });
+
+  document.addEventListener('astro:page-load', handleLoader);
+</script>

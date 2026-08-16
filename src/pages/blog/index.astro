@@ -1,0 +1,85 @@
+---
+import RootLayout from '@/layouts/RootLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+---
+
+<RootLayout 
+  title="Blog | Daffa Bisma"
+  description="Technical insights, engineering architecture, and reflections by Daffa Bisma Rudidharma."
+>
+  <div class="flex flex-col space-y-12">
+    
+    <!-- Blog Section Header (Figma Gallery Header) -->
+    <header class="flex flex-col space-y-3">
+      <h1 class="font-mono text-[32px] sm:text-[40px] uppercase tracking-tight text-[#191919] dark:text-[#f2f0ef]">
+        PERSONAL BLOG
+      </h1>
+      <div class="h-px bg-[#191919] dark:bg-[#f2f0ef] w-full" aria-hidden="true"></div>
+    </header>
+
+    <!-- 2-Column Blog Grid (Figma Nodes 7:315 & 8:347) -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 pt-4" aria-label="Articles Grid">
+      {sortedPosts.map((post) => (
+        <article class="flex flex-col space-y-4 group">
+          <!-- Featured Image Preview (320px height in Figma) -->
+          <a 
+            href={`/blog/${post.id}`} 
+            data-astro-prefetch
+            class="block w-full aspect-[456/320] min-h-[260px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.01] focus-visible:ring-2"
+            aria-label={`Read ${post.data.title}`}
+          >
+            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+              <span class="font-mono text-[14px] uppercase opacity-75">
+                {post.data.readingTime || '5 min read'}
+              </span>
+              <span class="font-mono text-[20px] font-bold mt-2 uppercase">
+                {post.data.title}
+              </span>
+            </div>
+          </a>
+
+          <!-- Post Title with Underline -->
+          <div class="flex flex-col">
+            <a 
+              href={`/blog/${post.id}`}
+              data-astro-prefetch
+              class="font-mono text-[24px] font-normal uppercase text-[#191919] dark:text-[#f2f0ef] group-hover:underline underline-offset-4 focus-visible:ring-2"
+            >
+              {post.data.title}
+            </a>
+            <div class="h-px bg-[#191919] dark:bg-[#f2f0ef] w-full mt-2" aria-hidden="true"></div>
+          </div>
+
+          <!-- Description with Underline -->
+          <div class="flex flex-col">
+            <p class="font-sans text-[18px] sm:text-[20px] text-[#191919] dark:text-[#f2f0ef] leading-relaxed line-clamp-3">
+              {post.data.description}
+            </p>
+            <div class="h-px bg-[#191919] dark:bg-[#f2f0ef] w-full mt-3" aria-hidden="true"></div>
+          </div>
+
+          <!-- Tags & Publication Meta -->
+          <div class="flex items-center justify-between font-mono text-[13px] opacity-75 pt-1">
+            <span>
+              {new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(post.data.publishDate)}
+            </span>
+            <div class="flex gap-2">
+              {post.data.tags.map((tag) => (
+                <span class="underline underline-offset-2">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
+
+  </div>
+</RootLayout>

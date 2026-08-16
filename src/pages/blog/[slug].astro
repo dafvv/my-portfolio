@@ -1,0 +1,111 @@
+---
+import RootLayout from '@/layouts/RootLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://daffabisma.com';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
+const postImage = post.data.coverImage 
+  ? new URL(post.data.coverImage, siteUrl).toString() 
+  : new URL('/og-image.png', siteUrl).toString();
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: post.data.title,
+  description: post.data.description,
+  image: postImage,
+  datePublished: post.data.publishDate.toISOString(),
+  dateModified: post.data.publishDate.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: 'Daffa Bisma Rudidharma',
+    url: siteUrl,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: 'Daffa Bisma Rudidharma',
+    url: siteUrl,
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonicalURL,
+  },
+  keywords: post.data.tags.join(', '),
+};
+---
+
+<RootLayout 
+  title={`${post.data.title} | Daffa Bisma`}
+  description={post.data.description}
+  image={post.data.coverImage || '/og-image.png'}
+  article={{
+    publishedTime: post.data.publishDate.toISOString(),
+    tags: post.data.tags,
+  }}
+>
+  <!-- TechArticle Structured Data (JSON-LD) -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} slot="head" />
+
+  <article class="max-w-3xl mx-auto flex flex-col space-y-8">
+    
+    <!-- Back Link Navigation -->
+    <div>
+      <a 
+        href="/blog" 
+        data-astro-prefetch
+        class="inline-flex items-center space-x-2 font-mono text-[14px] uppercase tracking-wider text-[#191919] dark:text-[#f2f0ef] hover:underline underline-offset-4 focus-visible:ring-2"
+      >
+        <img src="/media/icons/arrow-left.svg" alt="Back" class="w-4 h-4 dark:invert" />
+        <span>Back to all posts</span>
+      </a>
+    </div>
+
+    <!-- Article Header -->
+    <header class="flex flex-col space-y-4">
+      <div class="flex items-center space-x-4 font-mono text-[13px] opacity-75">
+        <time datetime={post.data.publishDate.toISOString()}>
+          {new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(post.data.publishDate)}
+        </time>
+        <span>•</span>
+        <span>{post.data.readingTime || '5 min read'}</span>
+      </div>
+
+      <h1 class="font-mono text-[32px] sm:text-[44px] uppercase leading-tight text-[#191919] dark:text-[#f2f0ef] tracking-tight">
+        {post.data.title}
+      </h1>
+
+      <div class="h-px bg-[#191919] dark:bg-[#f2f0ef] w-full" aria-hidden="true"></div>
+
+      <p class="font-sans text-[20px] text-[#191919] dark:text-[#f2f0ef] opacity-90 leading-relaxed italic">
+        {post.data.description}
+      </p>
+    </header>
+
+    <!-- MDX Article Body -->
+    <div class="prose dark:prose-invert max-w-none font-sans text-[18px] sm:text-[20px] leading-relaxed text-[#191919] dark:text-[#f2f0ef] prose-headings:font-mono prose-headings:uppercase prose-headings:tracking-tight prose-a:text-current prose-a:underline prose-code:font-mono prose-code:bg-[#d9d9d9] dark:prose-code:bg-[#262626] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-none">
+      <Content />
+    </div>
+
+    <!-- Tags Footer -->
+    {post.data.tags.length > 0 && (
+      <footer class="pt-8 border-t border-[#191919] dark:border-[#f2f0ef] flex flex-wrap gap-2">
+        {post.data.tags.map((tag) => (
+          <span class="px-3 py-1 border border-[#191919] dark:border-[#f2f0ef] font-mono text-[12px] uppercase">
+            #{tag}
+          </span>
+        ))}
+      </footer>
+    )}
+  </article>
+</RootLayout>
