@@ -17,11 +17,17 @@ import RootLayout from '@/layouts/RootLayout.astro';
 
     <!-- Section 1: Portrait & About Me (Figma Section 1) -->
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center" aria-label="About Me Section">
-      <!-- Portrait Placeholder Box (360x464px ratio) -->
-      <div class="lg:col-span-5 aspect-[360/464] max-w-[360px] w-full bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex items-center justify-center p-8">
-        <div class="font-mono text-[14px] uppercase text-center opacity-60">
-          [ Portrait / Photo ]
-        </div>
+      <!-- Portrait Image Box (360x464px ratio) -->
+      <div class="lg:col-span-5 aspect-[360/464] max-w-[360px] w-full bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] overflow-hidden">
+        <img 
+          src="/media/images/portrait.avif" 
+          alt="Daffa Bisma Rudidharma Portrait" 
+          width="360"
+          height="464"
+          loading="eager"
+          decoding="async"
+          class="w-full h-full object-cover"
+        />
       </div>
 
       <!-- About Me Text -->
@@ -33,7 +39,8 @@ import RootLayout from '@/layouts/RootLayout.astro';
           <div class="h-px bg-[#191919] dark:bg-[#f2f0ef] w-full mt-3 mb-6" aria-hidden="true"></div>
         </div>
         <p class="font-sans text-[18px] sm:text-[20px] leading-relaxed text-[#191919] dark:text-[#f2f0ef]">
-          Full-stack developer focused on building resilient web infrastructure, high-performance user interfaces, and autonomous multi-agent tooling. Driven by clean architecture, type safety, and minimal latency from the database query to the render frame.
+          I am a 3rd-year Software Engineering student at IPB University focusing on full-stack web development and UI/UX design.
+          My background spans hands-on development and project management, keeping workflows organized and delivered on schedule. I build functional web applications with clean and intuitive design.
         </p>
       </div>
     </section>
@@ -47,16 +54,27 @@ import RootLayout from '@/layouts/RootLayout.astro';
           </h2>
           <div class="h-px bg-[#191919] dark:bg-[#f2f0ef] w-full mt-3 mb-6" aria-hidden="true"></div>
         </div>
-        <p class="font-sans text-[18px] sm:text-[20px] leading-relaxed text-[#191919] dark:text-[#f2f0ef]">
-          Obsessed with engineering simplicity and developer ergonomics. I believe modern software should be blazingly fast, accessible to every user, and constructed on solid foundations rather than volatile runtime bloat.
-        </p>
+        <div class="space-y-4 font-sans text-[18px] sm:text-[20px] leading-relaxed text-[#191919] dark:text-[#f2f0ef]">
+          <p>
+            I see AI as a co-pilot, not a replacement for human judgment. The goal is to offload repetitive tasks and accelerate workflows while keeping critical thinking, design decisions, and system architecture in human hands.
+          </p>
+          <p>
+            Real leverage comes from AI literacy, not blind automation. Using these tools effectively requires understanding how they work, where they fail, and how to verify their output. I build software with this approach in mind. Using AI to assist execution while maintaining full control over the underlying logic.
+          </p>
+        </div>
       </div>
 
       <!-- Motivation Visual Box (456x200px ratio) -->
-      <div class="lg:col-span-5 aspect-[456/200] max-w-[456px] w-full bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex items-center justify-center p-6 order-1 lg:order-2">
-        <div class="font-mono text-[14px] uppercase text-center opacity-60">
-          [ Motivation Visual ]
-        </div>
+      <div class="lg:col-span-5 aspect-[456/200] max-w-[456px] w-full bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] overflow-hidden order-1 lg:order-2">
+        <img 
+          src="/media/images/motivation.avif" 
+          alt="Motivation Visual" 
+          width="456"
+          height="200"
+          loading="lazy"
+          decoding="async"
+          class="w-full h-full object-cover"
+        />
       </div>
     </section>
 

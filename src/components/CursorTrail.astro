@@ -1,11 +1,11 @@
 ---
-// Canvas Cursor Line Trail - Hardware-Accelerated Smooth Line Ribbon
+// Canvas Cursor Trail - Silver Diamond Sparks
 ---
 
 <canvas id="cursor-trail" class="fixed inset-0 pointer-events-none z-50 w-full h-full" aria-hidden="true"></canvas>
 
 <script>
-  function initCursorLineTrail() {
+  function initCursorSparks() {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const isTouch = 'ontouchstart' in window;
 
@@ -30,70 +30,138 @@
 
     window.addEventListener('resize', handleResize);
 
-    interface TrailPoint {
+    interface Spark {
       x: number;
       y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      rotation: number;
+      vRot: number;
       age: number;
+      maxAge: number;
     }
 
-    const points: TrailPoint[] = [];
-    const maxAge = 25;
+    const sparks: Spark[] = [];
+    let lastX = -1;
+    let lastY = -1;
     let animationFrameId: number | null = null;
     let isRunning = false;
 
     const handleMouseMove = (e: MouseEvent) => {
-      points.push({
-        x: e.clientX,
-        y: e.clientY,
-        age: 0,
-      });
+      const x = e.clientX;
+      const y = e.clientY;
+
+      const dist = lastX >= 0 ? Math.hypot(x - lastX, y - lastY) : 0;
+      const count = Math.min(Math.floor(dist / 6) + 1, 4);
+
+      for (let i = 0; i < count; i++) {
+        const offsetAngle = Math.random() * Math.PI * 2;
+        const offsetDist = Math.random() * 4;
+        const speed = (Math.random() * 0.8 + 0.2);
+
+        sparks.push({
+          x: x + Math.cos(offsetAngle) * offsetDist,
+          y: y + Math.sin(offsetAngle) * offsetDist,
+          vx: Math.cos(offsetAngle) * speed,
+          vy: Math.sin(offsetAngle) * speed + 0.15,
+          size: Math.random() * 6 + 4,
+          rotation: Math.random() * Math.PI,
+          vRot: (Math.random() - 0.5) * 0.08,
+          age: 0,
+          maxAge: Math.floor(Math.random() * 15 + 20),
+        });
+      }
+
+      lastX = x;
+      lastY = y;
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    function drawDiamondSpark(
+      cx: number,
+      cy: number,
+      size: number,
+      angle: number,
+      opacity: number,
+      isDark: boolean
+    ) {
+      if (!ctx) return;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      const w = size * 0.35;
+      const h = size;
+
+      const silverOuter = isDark ? '225, 230, 240' : '110, 120, 135';
+      const silverGlint = isDark ? '255, 255, 255' : '180, 190, 205';
+
+      // Outer vertical diamond
+      ctx.beginPath();
+      ctx.moveTo(0, -h);
+      ctx.lineTo(w, 0);
+      ctx.lineTo(0, h);
+      ctx.lineTo(-w, 0);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(${silverOuter}, ${opacity * 0.85})`;
+      ctx.fill();
+
+      // Horizontal cross flare for diamond sparkle
+      ctx.beginPath();
+      ctx.moveTo(-h * 0.5, 0);
+      ctx.lineTo(0, w * 0.5);
+      ctx.lineTo(h * 0.5, 0);
+      ctx.lineTo(0, -w * 0.5);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(${silverOuter}, ${opacity * 0.6})`;
+      ctx.fill();
+
+      // Brilliant white-silver core gleam
+      const innerW = w * 0.4;
+      const innerH = h * 0.4;
+      ctx.beginPath();
+      ctx.moveTo(0, -innerH);
+      ctx.lineTo(innerW, 0);
+      ctx.lineTo(0, innerH);
+      ctx.lineTo(-innerW, 0);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(${silverGlint}, ${Math.min(opacity * 1.2, 1)})`;
+      ctx.fill();
+
+      ctx.restore();
+    }
 
     function render() {
       if (!ctx || document.hidden || motionQuery.matches) {
         isRunning = false;
         return;
       }
+
       ctx.clearRect(0, 0, width, height);
-
       const isDark = document.documentElement.classList.contains('dark');
-      const strokeRgb = isDark ? '242, 240, 239' : '25, 25, 25';
 
-      // Age and prune points
-      for (let i = points.length - 1; i >= 0; i--) {
-        points[i].age++;
-        if (points[i].age >= maxAge) {
-          points.splice(i, 1);
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.age++;
+
+        if (s.age >= s.maxAge) {
+          sparks.splice(i, 1);
+          continue;
         }
-      }
 
-      // Draw smooth tapering line segments
-      if (points.length > 2) {
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vx *= 0.96;
+        s.vy *= 0.96;
+        s.rotation += s.vRot;
 
-        for (let i = 0; i < points.length - 1; i++) {
-          const p1 = points[i];
-          const p2 = points[i + 1];
+        const progress = s.age / s.maxAge;
+        const opacity = Math.max(1 - Math.pow(progress, 1.3), 0);
+        const currentSize = s.size * (1 - progress * 0.35);
 
-          const progress = (i + 1) / points.length;
-          const ageRatio = 1 - p1.age / maxAge;
-          const opacity = Math.max(progress * ageRatio * 0.7, 0);
-          const lineWidth = Math.max(progress * 2.8, 0.6);
-
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-
-          const midX = (p1.x + p2.x) / 2;
-          const midY = (p1.y + p2.y) / 2;
-          ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
-
-          ctx.strokeStyle = `rgba(${strokeRgb}, ${opacity})`;
-          ctx.lineWidth = lineWidth;
-          ctx.stroke();
-        }
+        drawDiamondSpark(s.x, s.y, currentSize, s.rotation, opacity, isDark);
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -139,7 +207,6 @@
 
     startLoop();
 
-    // Cleanup on view transition swap
     document.addEventListener(
       'astro:before-swap',
       () => {
@@ -153,6 +220,5 @@
     );
   }
 
-  // Bind to Astro page lifecycle
-  document.addEventListener('astro:page-load', initCursorLineTrail);
+  document.addEventListener('astro:page-load', initCursorSparks);
 </script>

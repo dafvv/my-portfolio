@@ -122,34 +122,6 @@ export default function ProjectSlider({ projects }: ProjectSliderProps) {
                 ))}
               </ul>
             </div>
-
-            {/* Optional Links */}
-            {(currentProject.link || currentProject.github) && (
-              <div className="flex items-center space-x-6 pt-2">
-                {currentProject.link && (
-                  <a
-                    href={currentProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 font-mono text-[16px] uppercase underline underline-offset-4 hover:opacity-75 focus-visible:ring-2"
-                  >
-                    <span>Live Demo</span>
-                    <img src="/media/icons/external-link.svg" alt="External" className="w-4 h-4 dark:invert" />
-                  </a>
-                )}
-                {currentProject.github && (
-                  <a
-                    href={currentProject.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 font-mono text-[16px] uppercase underline underline-offset-4 hover:opacity-75 focus-visible:ring-2"
-                  >
-                    <span>Source Code</span>
-                    <img src="/media/icons/git-branch.svg" alt="Git Branch" className="w-4 h-4 dark:invert" />
-                  </a>
-                )}
-              </div>
-            )}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -165,51 +137,88 @@ export default function ProjectSlider({ projects }: ProjectSliderProps) {
             animate="center"
             exit="exit"
             transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="w-full aspect-[16/9] min-h-[310px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex flex-col items-center justify-center p-8 relative overflow-hidden shadow-sm"
+            className="w-full aspect-[16/9] min-h-[310px] bg-[#d9d9d9] dark:bg-[#262626] border border-[#191919] dark:border-[#f2f0ef] flex flex-col items-center justify-center relative overflow-hidden shadow-sm"
           >
-            <div className="flex flex-col items-center justify-center text-center space-y-3">
-              <span className="font-mono text-[36px] font-bold text-[#191919] dark:text-[#f2f0ef]">
-                {formattedIndex}
-              </span>
-              <span className="font-mono text-[20px] uppercase text-[#191919] dark:text-[#f2f0ef] max-w-md">
-                {currentProject.title}
-              </span>
-              {currentProject.metrics && (
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  {currentProject.metrics.map((metric, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-[#191919] dark:bg-[#f2f0ef] text-[#f2f0ef] dark:text-[#191919] font-mono text-[12px] uppercase"
-                    >
-                      {metric}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+            {currentProject.previewImage ? (
+              <img
+                src={currentProject.previewImage}
+                alt={`${currentProject.title} preview`}
+                className="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center space-y-3 p-8">
+                <span className="font-mono text-[36px] font-bold text-[#191919] dark:text-[#f2f0ef]">
+                  {formattedIndex}
+                </span>
+                <span className="font-mono text-[20px] uppercase text-[#191919] dark:text-[#f2f0ef] max-w-md">
+                  {currentProject.title}
+                </span>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation Controls: Left and Right Arrows */}
-        <div className="flex items-center space-x-4 pt-2">
-          <button
-            type="button"
-            onClick={prevProject}
-            aria-label="Previous project"
-            className="px-4 py-3 border border-[#191919] dark:border-[#f2f0ef] bg-[#d9d9d9] dark:bg-[#262626] text-[#191919] dark:text-[#f2f0ef] font-mono text-[14px] uppercase flex items-center space-x-2 transition-transform hover:-translate-x-1 focus-visible:ring-2 select-none cursor-pointer"
-          >
-            <img src="/media/icons/arrow-left.svg" alt="Previous" className="w-4 h-4 dark:invert" />
-            <span>Prev</span>
-          </button>
-          <button
-            type="button"
-            onClick={nextProject}
-            aria-label="Next project"
-            className="px-4 py-3 border border-[#191919] dark:border-[#f2f0ef] bg-[#d9d9d9] dark:bg-[#262626] text-[#191919] dark:text-[#f2f0ef] font-mono text-[14px] uppercase flex items-center space-x-2 transition-transform hover:translate-x-1 focus-visible:ring-2 select-none cursor-pointer"
-          >
-            <span>Next</span>
-            <img src="/media/icons/arrow-right.svg" alt="Next" className="w-4 h-4 dark:invert" />
-          </button>
+        {/* Navigation Controls & Links Row */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+          {/* Navigation Controls: Left and Right Arrows */}
+          <div className="flex items-center space-x-4">
+            <button
+              type="button"
+              onClick={prevProject}
+              aria-label="Previous project"
+              className="px-4 py-3 border border-[#191919] dark:border-[#f2f0ef] bg-[#d9d9d9] dark:bg-[#262626] text-[#191919] dark:text-[#f2f0ef] font-mono text-[14px] uppercase flex items-center space-x-2 transition-transform hover:-translate-x-1 focus-visible:ring-2 select-none cursor-pointer"
+            >
+              <img src="/media/icons/arrow-left.svg" alt="Previous" className="w-4 h-4 dark:invert" />
+              <span>Prev</span>
+            </button>
+            <button
+              type="button"
+              onClick={nextProject}
+              aria-label="Next project"
+              className="px-4 py-3 border border-[#191919] dark:border-[#f2f0ef] bg-[#d9d9d9] dark:bg-[#262626] text-[#191919] dark:text-[#f2f0ef] font-mono text-[14px] uppercase flex items-center space-x-2 transition-transform hover:translate-x-1 focus-visible:ring-2 select-none cursor-pointer"
+            >
+              <span>Next</span>
+              <img src="/media/icons/arrow-right.svg" alt="Next" className="w-4 h-4 dark:invert" />
+            </button>
+          </div>
+
+          {/* Right-aligned Live Demo & Source Code Hyperlinks with Fade Animation */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`links-${currentProject.id}`}
+              variants={fadeVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
+              className="flex items-center space-x-6 ml-auto"
+            >
+              {currentProject.link && (
+                <a
+                  href={currentProject.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 font-mono text-[16px] uppercase underline underline-offset-4 hover:opacity-75 focus-visible:ring-2"
+                >
+                  <span>Live Demo</span>
+                  <img src="/media/icons/external-link.svg" alt="External" className="w-4 h-4 dark:invert" />
+                </a>
+              )}
+              {currentProject.github && (
+                <a
+                  href={currentProject.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 font-mono text-[16px] uppercase underline underline-offset-4 hover:opacity-75 focus-visible:ring-2"
+                >
+                  <span>Source Code</span>
+                  <img src="/media/icons/git-branch.svg" alt="Git Branch" className="w-4 h-4 dark:invert" />
+                </a>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>

@@ -1,24 +1,18 @@
 ---
-title: "DAFFA PORTFOLIO & DESIGN SYSTEM"
+title: "MY PORTFOLIO"
 projectNumber: "01"
-description: "A high-performance personal portfolio and editorial blog built with Astro SSG, Tailwind CSS, Motion, Lenis smooth scrolling, and hardware-accelerated 2D canvas interactions. Achieves perfect 100 Lighthouse scores across all metrics."
+description: "A personal portfolio and blog built with Astro, Tailwind CSS, and React to showcase projects and technical writing with fast page loads and clean typography."
 stack:
-  - "Astro 5"
+  - "Astro"
   - "TypeScript"
   - "Tailwind CSS"
-  - "React Islands"
-  - "Framer Motion"
-  - "Lenis Smooth Scroll"
-  - "HTML5 Canvas"
-previewImage: "/images/project-01.png"
-link: "https://daffabisma.dev"
-github: "https://github.com/dafvv/daffa-portfolio"
-metrics:
-  - "100 Lighthouse Performance"
-  - "0ms First Input Delay"
+  - "React"
+previewImage: "/media/images/portfolio.avif"
+link: "https://daffabr.vercel.app/"
+github: "https://github.com/dafvv/my-portfolio"
 order: 1
 ---
 
 ## Overview
 
-Designed as a minimalist, editorial developer portfolio translating Figma designs with 100% token fidelity. Implements zero-bloat island architecture, server-rendered static HTML baseline, and client-side motion only where interactive.
+A personal portfolio and blog built with Astro, Tailwind CSS, and React to showcase projects and technical writing with fast page loads and clean typography.
