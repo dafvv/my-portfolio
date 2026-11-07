@@ -1,0 +1,30 @@
+.rule {
+  height: 1px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.toneLine {
+  background-color: var(--color-line);
+}
+
+.toneInk {
+  background-color: var(--color-ink);
+}
+
+.scopeFull {
+  width: 100%;
+}
+
+.scopeInset {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scopeColumn {
+  width: 100%;
+}

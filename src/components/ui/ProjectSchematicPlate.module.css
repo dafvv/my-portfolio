@@ -1,0 +1,117 @@
+.schematicWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: var(--color-paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  user-select: none;
+}
+
+.schematicHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px 6px 14px;
+  border-bottom: 1px dashed var(--color-line);
+  z-index: 2;
+}
+
+.schematicTag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.schematicTagDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+}
+
+.schematicId {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  font-family: monospace;
+  color: var(--color-muted);
+}
+
+.svgCanvas {
+  width: 100%;
+  flex: 1;
+  display: block;
+}
+
+.schematicFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 14px 10px 14px;
+  border-top: 1px dashed var(--color-line);
+  font-size: 9px;
+  letter-spacing: 0.6px;
+  color: var(--color-muted);
+  font-weight: 500;
+  z-index: 2;
+}
+
+.schematicCoord {
+  font-family: monospace;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.schematicWrapper:hover .schematicTagDot {
+  background-color: var(--color-accent-bright);
+  box-shadow: 0 0 6px var(--color-accent-bright);
+}
+
+.pulseLine {
+  stroke-dasharray: 4 4;
+  animation: dashMove 16s linear infinite;
+}
+
+@keyframes dashMove {
+  from {
+    stroke-dashoffset: 64;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.beaconRing {
+  animation: beaconPulse 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  transform-origin: center;
+}
+
+@keyframes beaconPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulseLine,
+  .beaconRing {
+    animation: none !important;
+  }
+}

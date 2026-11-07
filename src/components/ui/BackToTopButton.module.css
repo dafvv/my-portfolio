@@ -1,0 +1,24 @@
+.floatingWrapper {
+  position: fixed;
+  right: max(var(--gutter), calc((100vw - var(--page-width)) / 2 + var(--gutter)));
+  bottom: 72px;
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 250ms ease-out, transform 250ms ease-out, visibility 250ms;
+}
+
+.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floatingWrapper {
+    transition: none;
+  }
+}

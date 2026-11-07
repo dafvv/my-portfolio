@@ -1,0 +1,40 @@
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.66px;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  word-break: break-word;
+}
+
+.weightRegular {
+  font-weight: 400;
+}
+
+.weightSemibold {
+  font-weight: 600;
+}
+
+.weightBold {
+  font-weight: 700;
+}
+
+.lineHeightNormal {
+  line-height: normal;
+}
+
+.lineHeight18 {
+  line-height: 18px;
+}
+
+.toneInk {
+  color: var(--color-ink);
+}
+
+.toneMuted {
+  color: var(--color-muted);
+}
+
+.tonePaper {
+  color: var(--color-paper);
+}

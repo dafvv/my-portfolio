@@ -1,0 +1,382 @@
+.hero {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: var(--color-paper);
+  border-bottom: 1px solid var(--color-ink);
+}
+
+.cuttingMatFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  border: none;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--max-page-width);
+  margin: 0 auto;
+  min-height: calc(100vh - 72px - 44px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
+  gap: clamp(32px, 4vw, 72px);
+  align-items: center;
+  padding: clamp(36px, 4.5vw, 64px) var(--gutter);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.leftColumn {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.5vh, 32px);
+}
+
+.telemetryTape {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-paper);
+  border-top: 1px solid var(--color-ink);
+  display: flex;
+  height: 44px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.tapeTrack {
+  display: flex;
+  width: max-content;
+  animation: scrollSeamless 32s linear infinite;
+  will-change: transform;
+}
+
+.tapeCluster {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tapeItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.88px;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.tapeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-accent-bright);
+  animation: pulseBeacon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.tapeSep {
+  color: var(--color-accent);
+  font-weight: 800;
+  font-size: 11px;
+  user-select: none;
+}
+
+@keyframes scrollSeamless {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tapeTrack,
+  .tapeDot {
+    animation: none !important;
+  }
+}
+
+.metaStrip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.88px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--color-line);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-accent-bright);
+  animation: pulseBeacon 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.timeBadge {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  padding: 3px 8px;
+}
+
+.portraitFrame {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.azimuthRing {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px dashed var(--color-line);
+  pointer-events: none;
+  animation: rotateAzimuth 48s linear infinite;
+}
+
+@keyframes rotateAzimuth {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.azimuthPip {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-accent);
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .azimuthRing,
+  .statusDot {
+    animation: none !important;
+  }
+}
+
+@keyframes pulseBeacon {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.introHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nameHeading {
+  max-width: 100%;
+}
+
+.role {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.tagline {
+  font-size: clamp(16px, 1.25vw, 20px);
+  line-height: 1.55;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin: 0;
+  max-width: 640px;
+}
+
+.introBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.paragraph {
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.68;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin: 0;
+  max-width: 620px;
+}
+
+.introActions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rightColumn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.portraitFrame {
+  position: relative;
+  width: clamp(320px, 28vw, 520px);
+  height: clamp(320px, 28vw, 520px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portraitWrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--color-line);
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portraitWrapper:hover {
+  transform: scale(1.01);
+}
+
+.portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.socialLink {
+  text-decoration: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.socialLink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.socialLink:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (max-width: 960px) {
+  .inner {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    padding: clamp(32px, 5vw, 48px) var(--gutter);
+    gap: 40px;
+    min-height: auto;
+  }
+
+  .leftColumn {
+    width: 100%;
+    max-width: 100%;
+    gap: 20px;
+  }
+
+  .rightColumn {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .portraitFrame {
+    width: clamp(240px, 52vw, 360px);
+    height: clamp(240px, 52vw, 360px);
+  }
+}
+
+@media (max-width: 520px) {
+  .metaStrip {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .introActions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .introActions > * {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  .socialLinks {
+    gap: 20px;
+  }
+}

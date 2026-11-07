@@ -1,0 +1,51 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js build & export artifacts
+/.next/
+/out/
+/build
+*.tsbuildinfo
+
+# Testing & Automation artifacts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Agent & Tool cache
+/.agents/
+/.impeccable/
+
+# Design mockups & scratch artifacts outside core site
+/*.png
+/CRITIQUE.md
+/PRODUCT.md
+
+# Environment files
+.env
+.env*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vercel & Turbo
+.vercel
+.turbo
+
+# Operating System files
+.DS_Store
+Thumbs.db
+*.pem
+
+# IDE & Editor configurations
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,29 @@
+.matContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  border: none;
+  background-color: var(--color-paper);
+}
+
+.matSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.vignetteOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 35% 50%,
+    rgba(255, 253, 247, 0.94) 0%,
+    rgba(255, 253, 247, 0.7) 50%,
+    rgba(255, 253, 247, 0.3) 100%
+  );
+  pointer-events: none;
+}

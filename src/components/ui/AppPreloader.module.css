@@ -1,0 +1,85 @@
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 60px;
+  box-sizing: border-box;
+  transform: translateY(0);
+  transition: transform 600ms cubic-bezier(0.76, 0, 0.24, 1), visibility 600ms;
+}
+
+.dismissed {
+  transform: translateY(-100%);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    transition: none;
+  }
+  .dismissed {
+    display: none;
+  }
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.brand {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.66px;
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+
+.centerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+}
+
+.name {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.status {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-line);
+  margin: 0;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  position: relative;
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--color-accent);
+  transition: width 200ms ease-out;
+}
